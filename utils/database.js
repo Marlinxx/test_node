@@ -4,6 +4,7 @@ require('dotenv').config();
 let mySQL_pool;
 
 module.exports.initialiseDB = () => {
+    console.log('connecting to', process.env.HOST);
     mySQL_pool = mysql.createPool({
         host: process.env.HOST,
         user: process.env.DB_USER,
@@ -17,7 +18,7 @@ module.exports.initialiseDB = () => {
 module.exports.executeQuery = (query, res) => {
     mySQL_pool.getConnection((err, connection) => {
         if (err) {
-            console.log('Error in get connection to DB', err);
+            console.log('Error in get connection to' + process.env.HOST, err);
             res.send({
                 status: false,
                 responseMessage: {

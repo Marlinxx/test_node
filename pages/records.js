@@ -3,7 +3,7 @@ const router = express.Router();
 const database = require('../utils/database');
 
 getValues = async (req, res) => {
-    let query = 'SELECT * FROM TEST_APPLICATION.RECORDS'
+    let query = `SELECT * FROM ${process.env.DATABASE}.records`;
     await database.executeQuery(query, res);
 }
 
@@ -19,7 +19,7 @@ generateValues = async (req, res) => {
         }
     };
     let query = `INSERT INTO 
-                    ${process.env.DATABASE}.RECORDS 
+                    ${process.env.DATABASE}.records 
                     (ID,FIELD1,FIELD2,FIELD3,FIELD4,FIELD5,
                     FIELD6,FIELD7,FIELD8,FIELD9,
                     FIELD10,ACTIVEINDICATOR) 
@@ -29,32 +29,32 @@ generateValues = async (req, res) => {
 }
 
 resetTable = async (req, res) => {
-    let query = `DELETE FROM ${process.env.DATABASE}.RECORDS`
+    let query = `DELETE FROM ${process.env.DATABASE}.records`
     await database.executeQuery(query, res);
 }
 
 setExpiryAll = async (req, res) => {
-    let query = `UPDATE ${process.env.DATABASE}.RECORDS SET 
+    let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP`
     await database.executeQuery(query, res);
 }
 
 setInactiveAll = async (req, res) => {
-    let query = `UPDATE ${process.env.DATABASE}.RECORDS SET 
+    let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP, 
                     ACTIVEINDICATOR='N'`
     await database.executeQuery(query, res);
 }
 
 setExpiry = async (req, res) => {
-    let query = `UPDATE ${process.env.DATABASE}.RECORDS SET 
+    let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP 
                     WHERE ID=${req.body.id}`
     await database.executeQuery(query, res);
 }
 
 setInactive = async (req, res) => {
-    let query = `UPDATE ${process.env.DATABASE}.RECORDS SET 
+    let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP, 
                     ACTIVEINDICATOR='N' 
                     WHERE ID=${req.body.id}`

@@ -4,7 +4,6 @@ require('dotenv').config();
 let mySQL_pool;
 
 module.exports.initialiseDB = () => {
-    console.log('connecting to', process.env.HOST);
     mySQL_pool = mysql.createPool({
         host: process.env.HOST,
         user: process.env.DB_USER,

@@ -15,5 +15,5 @@ app.use('/records', records)
 const siteDirectory = __dirname + '/build/';
 app.use('/', express.static(siteDirectory));
 
-const PORT = 5000;
+const PORT = (process.env.PORT || 5000);
 app.listen(PORT, () => console.log(`node listening on port ${PORT}`));

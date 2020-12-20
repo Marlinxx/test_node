@@ -14,32 +14,24 @@ module.exports.initialiseDB = () => {
     });
 }
 
-module.exports.executeQuery = (query, res) => {
-    mySQL_pool.getConnection((err, connection) => {
-        if (err) {
-            console.log('Error in get connection to' + process.env.HOST, err);
-            res.send({
-                status: false,
-                responseMessage: {
-                    text: 'Error in get connection',
-                    err: err
-                }
-            });
-        } else {
-            connection.query(query, (err, result) => {
-                connection.release();
-                if (err) {
-                    res.send({
-                        status: false,
-                        data: err
-                    })
-                } else {
-                    res.send({
-                        status: true,
-                        data: result
-                    })
-                }
-            });
-        }
+module.exports.executeQuery = (query) => {
+    return new Promise((resolve, reject) => {
+        mySQL_pool.getConnection((err, connection) => {
+            if (err) {
+                console.log('Error in get connection to' + process.env.HOST, err);
+                reject(err);
+            } else {
+                connection.query(query, (err, result) => {
+                    connection.release();
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve({
+                            data: result
+                        })
+                    }
+                });
+            }
+        })
     })
 }

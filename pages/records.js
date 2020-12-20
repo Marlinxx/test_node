@@ -2,20 +2,30 @@ const express = require('express');
 const router = express.Router();
 const database = require('../utils/database');
 
-getValues = async (req, res) => {
+getValues = (req, res) => {
     let query = `SELECT * FROM ${process.env.DATABASE}.records`;
-    await database.executeQuery(query, res);
+    database.executeQuery(query).then(result => {
+        res.send({
+            status: 'SUCCESS',
+            data: result
+        })
+    }).catch((err) => {
+        res.send({
+            status: 'FAILED',
+            err: err.code + '-' + err.sqlMessage
+        })
+    })
 }
 
-generateValues = async (req, res) => {
+generateValues = (req, res) => {
     let rowsCount = 10000;
-    let values ='';
-    for(let count = 1; count <= rowsCount; count++) {
-        values +=`(${count},'value1','value2','value3',
+    let values = '';
+    for (let count = 1; count <= rowsCount; count++) {
+        values += `(${count},'value1','value2','value3',
         'value4','value5','value6','value7','value8',
         'value9','value10','Y')`
-        if(count != rowsCount) {
-            values +=',';
+        if (count != rowsCount) {
+            values += ',';
         }
     };
     let query = `INSERT INTO 
@@ -25,40 +35,100 @@ generateValues = async (req, res) => {
                     FIELD10,ACTIVEINDICATOR) 
                     VALUES 
                     ${values}`;
-    await database.executeQuery(query, res);
+    database.executeQuery(query, res).then(result => {
+        res.send({
+            status: 'SUCCESS',
+            data: result
+        })
+    }).catch((err) => {
+        res.send({
+            status: 'FAILED',
+            err: err.code + '-' + err.sqlMessage
+        })
+    })
 }
 
-resetTable = async (req, res) => {
+resetTable = (req, res) => {
     let query = `DELETE FROM ${process.env.DATABASE}.records`
-    await database.executeQuery(query, res);
+    database.executeQuery(query, res).then(result => {
+        res.send({
+            status: 'SUCCESS',
+            data: result
+        })
+    }).catch((err) => {
+        res.send({
+            status: 'FAILED',
+            err: err.code + '-' + err.sqlMessage
+        })
+    })
 }
 
-setExpiryAll = async (req, res) => {
+setExpiryAll = (req, res) => {
     let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP`
-    await database.executeQuery(query, res);
+    database.executeQuery(query, res).then(result => {
+        res.send({
+            status: 'SUCCESS',
+            data: result
+        })
+    }).catch((err) => {
+        res.send({
+            status: 'FAILED', 
+            err: err.code + '-' + err.sqlMessage
+        })
+    })
 }
 
-setInactiveAll = async (req, res) => {
+setInactiveAll = (req, res) => {
     let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP, 
                     ACTIVEINDICATOR='N'`
-    await database.executeQuery(query, res);
+    database.executeQuery(query, res).then(result => {
+        res.send({
+            status: 'SUCCESS',
+            data: result
+        })
+    }).catch((err) => {
+        res.send({
+            status: 'FAILED',
+            err: err.code + '-' + err.sqlMessage
+        })
+    })
 }
 
-setExpiry = async (req, res) => {
+setExpiry = (req, res) => {
     let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP 
                     WHERE ID=${req.body.id}`
-    await database.executeQuery(query, res);
+    database.executeQuery(query, res).then(result => {
+        res.send({
+            status: 'SUCCESS',
+            data: result
+        })
+    }).catch((err) => {
+        res.send({
+            status: 'FAILED', 
+            err: err.code + '-' + err.sqlMessage
+        })
+    })
 }
 
-setInactive = async (req, res) => {
+setInactive = (req, res) => {
     let query = `UPDATE ${process.env.DATABASE}.records SET 
                     EXPIRY_DATE=CURRENT_TIMESTAMP, 
                     ACTIVEINDICATOR='N' 
                     WHERE ID=${req.body.id}`
-    await database.executeQuery(query, res);
+    database.executeQuery(query, res).then(result => {
+        res.send({
+            status: 'SUCCESS',
+            data: result
+        })
+    }).catch((err) => {
+        res.send({
+            status: 'FAILED', 
+            err: err.code + '-' + err.sqlMessage
+        })
+    })
 }
 
 router.get('/getValues', getValues);
